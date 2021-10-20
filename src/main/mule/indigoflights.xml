@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	
+	<flow name="indigoflightsflow" doc:id="5854d76d-01ed-4787-940c-ec33de387e2f" >
+		<logger level="INFO" doc:name="Logger" doc:id="822575eb-a6a3-407e-8e2f-d0f1dd9fccb0" message="indigoflightsflow starts............................." />
+		<http:request method="GET" doc:name="Request" doc:id="8957a2ca-183c-48ae-9044-3275a5bb7773" config-ref="HTTP_Request_configuration" path="/api/getFlights" >
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	from : attributes.queryParams.source,
+	to : attributes.queryParams.destination,
+	depatureDate : attributes.queryParams.doj
+}]]]></http:query-params>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="d51b5df2-85cc-42ad-959c-37a06d648409" message="Response from the indigoairlines....................................#[payload]" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="29a88350-959c-46ef-9f6a-a72305558f77" type="HTTP:CONNECTIVITY, HTTP:METHOD_NOT_ALLOWED" >
+				<ee:transform doc:name="Transform Message" doc:id="4544de2c-9095-4dce-8796-d5ddb916118d" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	statusCode: 500,
+	 message:"unable to process your request,please try  after some time"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>
