@@ -18,6 +18,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 }]]]></http:query-params>
 		</http:request>
 		<logger level="INFO" doc:name="Logger" doc:id="d51b5df2-85cc-42ad-959c-37a06d648409" message="Response from the indigoairlines....................................#[payload]" />
+		<logger level="INFO" doc:name="Logger" doc:id="4e20085c-d9b8-402a-96b2-402a074ff526" message="dummy"/>
 		<error-handler >
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="29a88350-959c-46ef-9f6a-a72305558f77" type="HTTP:CONNECTIVITY, HTTP:METHOD_NOT_ALLOWED" >
 				<ee:transform doc:name="Transform Message" doc:id="4544de2c-9095-4dce-8796-d5ddb916118d" >
